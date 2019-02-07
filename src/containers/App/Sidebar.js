@@ -94,7 +94,7 @@ class Sidebar extends PureComponent {
     } else {
       const currentMaster = masterList.find((element) => element.url === location.pathname);
       if (checkPage(location.pathname, '/master')) {
-        document.getElementById('page-title-01').innerHTML = 'Master';
+        document.getElementById('page-title-01').innerHTML = 'Master Page';
       } else if (location.pathname === '/') {
         document.getElementById('page-title-01').innerHTML = 'Home';
       } else if (currentMaster === undefined) {
