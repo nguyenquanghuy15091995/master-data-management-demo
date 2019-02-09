@@ -13,22 +13,36 @@ class ReduxSelect extends Component {
       meta: { touched, error },
       children,
       fullWidth,
+      variant,
+      minWidth,
     } = this.props;
     return (
-      <FormControl style={{ width: fullWidth ? '100%' : 'auto' }} variant="outlined" error={touched && error}>
-        <InputLabel htmlFor={`outlined-select-${name}`}>{label}</InputLabel>
-        <Select
-          {...input}
-          input={
-            <OutlinedInput
-              name={name}
-              labelWidth={label ? label.length * 7.5 : 0}
-              id={`outlined-select-${name}`}
-            />
-          }
-        >
-          {children}
-        </Select>
+      <FormControl style={{ width: fullWidth ? '100%' : 'auto', minWidth: minWidth ? minWidth : 100 }} variant="outlined" error={touched && error}>
+        {label ? <InputLabel htmlFor={`outlined-select-${name}`}>{label}</InputLabel> : null}
+        {
+          variant === 'outlined' ? (
+            <Select
+              {...input}
+              input={
+                <OutlinedInput
+                  name={name}
+                  labelWidth={label ? label.length * 7.5 : 0}
+                  id={`outlined-select-${name}`}
+                />
+              }
+            >
+              {children}
+            </Select>
+          ) : (
+              <Select
+                {...input}
+                name={name}
+                id={`outlined-select-${name}`}
+              >
+                {children}
+              </Select>
+            )
+        }
       </FormControl>
     );
   }

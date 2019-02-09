@@ -3,6 +3,7 @@ import { fromJS } from 'immutable';
 import {
   SET_SIDEBAR_OPEN,
   UPDATE_MASTER_ITEM,
+  CREATE_MASTER_ITEM,
 } from './constants';
 
 const initState = fromJS({
@@ -23,6 +24,9 @@ function appReducer(state = initState, action) {
       const index = list.findIndex(i => i.id === action.masterItem.id);
       list.splice(index, 1, action.masterItem);
       return state.set('masterList', list);
+    case CREATE_MASTER_ITEM:
+      const listAdd = state.get('masterList').push(action.masterItem);
+      return state.set('masterList', listAdd);
     default:
       return state;
   }

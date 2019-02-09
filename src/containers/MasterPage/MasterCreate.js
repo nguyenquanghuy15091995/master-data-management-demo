@@ -4,17 +4,21 @@ import { bindActionCreators, compose } from 'redux';
 import { push } from 'connected-react-router';
 import Fade from '@material-ui/core/Fade';
 import Typography from '@material-ui/core/Typography';
-import { reduxForm, Field } from 'redux-form/immutable';
+import { reduxForm, Field, FieldArray } from 'redux-form/immutable';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
+import { Map as iMap } from 'immutable';
 
 import ReduxField from 'components/ReduxField';
 import ReduxSelect from 'components/ReduxSelect';
 import IconSelector from 'components/IconSelector';
 
+import { createMasterItem } from 'containers/App/actions';
+
+import AttributeTable from './AttributeTable';
 import { MASTER_DATA_STATUS } from './constants';
 
 function styles() {
@@ -36,17 +40,20 @@ function styles() {
       justifyContent: 'flex-end',
     },
     formContent: {
-      padding: '40px 20px 30px 20px',
+      padding: '40px 40px 30px 40px',
+    },
+    tableContent: {
+      padding: '10px 20px 30px 20px',
     },
     rightActions: {
       flexGrow: 1,
     },
     addButton: {
       marginLeft: 10,
-      backgroundColor: '#009688',
+      backgroundColor: '#1e88e5',
       color: '#FFF',
       '&:hover': {
-        backgroundColor: '#4db6ac',
+        backgroundColor: '#2196f3',
       },
     },
     enableColor: {
@@ -73,8 +80,21 @@ class MasterCreate extends PureComponent {
     });
   }
 
+  submit = (values) => {
+    const { doCreateMasterItem } = this.props;
+    const temp = values.toJS();
+    const urlTemp = '/' + temp.url.split('/').join('');
+    const idTemp = Date.now();
+    const result = iMap({
+      ...temp,
+      id: idTemp,
+      url: urlTemp,
+    });
+    doCreateMasterItem(result);
+  }
+
   render() {
-    const { classes, redirect } = this.props;
+    const { classes, redirect, handleSubmit } = this.props;
     return (
       <Fade in timeout={700}>
         <form>
@@ -100,7 +120,7 @@ class MasterCreate extends PureComponent {
                     label="URL (/)"
                     fullWidth
                     normalize={(value) => {
-                      if(value) return value.replace(/ /g, '-');
+                      if (value) return value.replace(/ /g, '-');
                       return value;
                     }}
                   />
@@ -118,6 +138,9 @@ class MasterCreate extends PureComponent {
               <Grid item xs={12} sm={12} md={12}><Field name="description" variant="outlined" multiline component={ReduxField} label="Description" fullWidth /></Grid>
             </Grid>
           </div>
+          <div className={classes.tableContent}>
+            <FieldArray name="attributes" component={AttributeTable} />
+          </div>
           <div className={classes.botControl}>
             <Button
               variant="contained"
@@ -131,6 +154,7 @@ class MasterCreate extends PureComponent {
               variant="contained"
               className={classes.addButton}
               style={{ minWidth: 100 }}
+              onClick={handleSubmit(this.submit)}
             >
               Submit
             </Button>
@@ -144,6 +168,7 @@ class MasterCreate extends PureComponent {
 function mapDispatchToProps(dispatch) {
   return {
     redirect: bindActionCreators(push, dispatch),
+    doCreateMasterItem: bindActionCreators(createMasterItem, dispatch),
   };
 }
 
