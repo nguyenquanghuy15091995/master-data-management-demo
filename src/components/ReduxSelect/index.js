@@ -15,9 +15,10 @@ class ReduxSelect extends Component {
       fullWidth,
       variant,
       minWidth,
+      required,
     } = this.props;
     return (
-      <FormControl style={{ width: fullWidth ? '100%' : 'auto', minWidth: minWidth ? minWidth : 100 }} variant="outlined" error={touched && error}>
+      <FormControl required={required} style={{ width: fullWidth ? '100%' : 'auto', minWidth: minWidth ? minWidth : 100 }} variant="outlined" error={touched && error}>
         {label ? <InputLabel htmlFor={`outlined-select-${name}`}>{label}</InputLabel> : null}
         {
           variant === 'outlined' ? (
@@ -26,7 +27,7 @@ class ReduxSelect extends Component {
               input={
                 <OutlinedInput
                   name={name}
-                  labelWidth={label ? label.length * 7.5 : 0}
+                  labelWidth={label ? (label.length + (required ? 1.5 : 0)) * 7.5 : 0}
                   id={`outlined-select-${name}`}
                 />
               }

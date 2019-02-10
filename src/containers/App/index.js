@@ -10,6 +10,9 @@ const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
   },
+  palette: {
+    primary: { main: '#1e88e5' },
+  },
 });
 
 function styles() {

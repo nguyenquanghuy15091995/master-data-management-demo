@@ -11,8 +11,8 @@ const configStore = (history) => createStore(
   initialState,
   composeEnhancer(
     applyMiddleware(
-      thunk,
       routerMiddleware(history),
+      thunk,
     ),
   ),
 );

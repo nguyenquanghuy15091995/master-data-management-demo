@@ -143,7 +143,7 @@ class MasterList extends PureComponent {
                           <TableCell key={item.id} component="td" scope="row">
                             <span
                               className={classes.linkDetail}
-                              onClick={() => redirect(`/master/detail/${item.id}`)}
+                              onClick={() => redirect(`/master/detail/${row.id}`)}
                             >
                               {row[item.value]}
                             </span>

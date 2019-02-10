@@ -7,14 +7,16 @@ class ReduxField extends Component {
       label,
       input,
       meta: { touched, invalid, error },
+      nonHelpText,
       ...custom
     } = this.props;
+    const help = nonHelpText ? !nonHelpText : true;
     return (
       <TextField
         label={label}
         placeholder={label}
         error={touched && invalid}
-        helperText={touched && error}
+        helperText={touched && help && error}
         {...input}
         {...custom}
       />

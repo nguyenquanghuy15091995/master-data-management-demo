@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import PropTypes from 'prop-types';
 
 import HomePage from 'containers/HomePage';
 import { MasterListPage, MasterCreatePage, MasterDetailPage } from 'containers/MasterPage';

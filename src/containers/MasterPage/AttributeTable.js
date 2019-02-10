@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
-import Fade from '@material-ui/core/Fade';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
 import { Field } from 'redux-form/immutable';
@@ -16,7 +14,6 @@ import AddListIcon from '@material-ui/icons/LibraryAdd';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import CustomTable from 'components/CustomTable';
-import TablePaginationActions from 'components/CustomTable/TablePaginationActions';
 import ReduxField from 'components/ReduxField';
 import ReduxSelect from 'components/ReduxSelect';
 
@@ -109,6 +106,7 @@ class AttributeTable extends Component {
                           <TableCell className={classes.attCell} key={`${field}.${item.value}-${item.id}`} component="td" scope="row">
                             <Field name={`${field}.${item.value}`} multiline component={ReduxSelect} fullWidth>
                               <MenuItem value={ATTRIBUTE_TYPES.text}>{ATTRIBUTE_TYPES.text}</MenuItem>
+                              <MenuItem value={ATTRIBUTE_TYPES.longText}>{ATTRIBUTE_TYPES.longText}</MenuItem>
                               <MenuItem value={ATTRIBUTE_TYPES.number}>{ATTRIBUTE_TYPES.number}</MenuItem>
                             </Field>
                           </TableCell>
@@ -134,13 +132,13 @@ class AttributeTable extends Component {
                       if (item.value === 'name') {
                         return (
                           <TableCell className={classes.attCell} key={`${field}.${item.value}-${item.id}`} component="td" scope="row">
-                            <Field name={`${field}.${item.value}`} style={{ minWidth: 100 }} component={ReduxField} fullWidth />
+                            <Field nonHelpText name={`${field}.${item.value}`} style={{ minWidth: 100 }} component={ReduxField} fullWidth />
                           </TableCell>
                         );
                       }
                       return (
                         <TableCell className={classes.attCell} key={`${field}.${item.value}-${item.id}`} component="td" scope="row">
-                          <Field name={`${field}.${item.value}`} component={ReduxField} fullWidth />
+                          <Field nonHelpText name={`${field}.${item.value}`} component={ReduxField} fullWidth />
                         </TableCell>
                       );
                     })
@@ -156,7 +154,7 @@ class AttributeTable extends Component {
                   <div className={classes.totalRecord}>
                     <Typography variant="h6">Total record: {fields.length}</Typography>
                   </div>
-                  <Button type="button" onClick={this.addRow} className={classes.addButton}>
+                  <Button id="btn-add-att" type="button" onClick={this.addRow} className={classes.addButton}>
                     <AddListIcon size={30} />
                   </Button>
                 </div>

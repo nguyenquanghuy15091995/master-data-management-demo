@@ -15,3 +15,7 @@ export const makeSelectLocation = () => createSelector(selectRouter, locationSta
 export const makeSelectMasterList = () => createSelector(selectGlobal, masterListState =>
   masterListState.get('masterList').toJS(),
 );
+
+export const makeSelectCurrentMaster = () => createSelector(selectGlobal, masterState =>
+  masterState.get('currentMaster') !== null && masterState.get('currentMaster') !== undefined ? masterState.get('currentMaster').toJS() : null,
+);
