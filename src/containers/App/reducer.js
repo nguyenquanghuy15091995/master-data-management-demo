@@ -12,14 +12,14 @@ const initState = fromJS({
   sidebarOpen: false,
   masterList: [
     {
-      id: 1, name: 'Test 1', icon: 'thumb_up', status: 'ENABLE', url: '/test-1', description: 'test test test', attributes: [
+      id: 1, name: 'Test 1', icon: 'thumb_up', status: 'ENABLE', url: '/test-1', description: 'test test test', active: true, attributes: [
         { id: 1, name: 'col 1', code: 'col1', type: 'text', description: 'col 1 col 1', status: 'ENABLE' },
         { id: 2, name: 'col 2', code: 'col2', type: 'number', description: 'col 2 col 2', status: 'ENABLE' },
         { id: 3, name: 'col 3', code: 'col3', type: 'text', description: 'col 3 col 3', status: 'ENABLE' },
       ]
     },
     {
-      id: 2, name: 'Test 2', icon: 'thumb_up', status: 'ENABLE', url: '/test-2', description: 'test test test', attributes: [
+      id: 2, name: 'Test 2', icon: 'thumb_up', status: 'ENABLE', url: '/test-2', description: 'test test test', active: true, attributes: [
         { id: 1, name: 'col 1', code: 'col1', type: 'text', description: 'col 1 col 1', status: 'ENABLE' },
         { id: 2, name: 'col 2', code: 'col2', type: 'number', description: 'col 2 col 2', status: 'ENABLE' },
         { id: 3, name: 'col 3', code: 'col3', type: 'text', description: 'col 3 col 3', status: 'ENABLE' },

@@ -15,6 +15,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import CustomTable from 'components/CustomTable';
 import TablePaginationActions from 'components/CustomTable/TablePaginationActions';
@@ -30,19 +33,19 @@ function styles() {
     masterPageContainer: {},
     ENABLE: {
       display: 'inline-block',
-      backgroundColor: '#2962ff',
-      padding: 7,
+      backgroundColor: '#4caf50',
+      padding: 5,
+      borderRadius: '50%',
       color: '#FFF',
-      borderRadius: 3,
-      minWidth: 60,
+      marginRight: 7,
     },
     DISABLE: {
       display: 'inline-block',
-      backgroundColor: '#f50057',
-      padding: 7,
+      backgroundColor: '#607d8b',
+      padding: 5,
+      borderRadius: '50%',
       color: '#FFF',
-      borderRadius: 3,
-      minWidth: 60,
+      marginRight: 7,
     },
     topControl: {
       padding: '5px 0px',
@@ -113,7 +116,7 @@ class MasterList extends PureComponent {
                       key={item.id}
                       component="th"
                       scope="row"
-                      align={item.value === 'status' || item.value === 'icon' ? 'center' : 'left'}
+                      align={item.value === 'icon' || item.value === 'actions' ? 'center' : 'left'}
                     >
                       {item.name}
                     </TableCell>
@@ -134,19 +137,27 @@ class MasterList extends PureComponent {
                         );
                       } else if (item.value === 'status') {
                         return (
-                          <TableCell key={item.id} component="td" scope="row" align="center">
-                            <div className={classes[row[item.value]]}>{row[item.value]}</div>
+                          <TableCell key={item.id} component="td" scope="row">
+                            <span className={classes[row[item.value]]}></span><span>{row[item.value]}</span>
                           </TableCell>
                         );
                       } else if (item.value === 'name') {
                         return (
                           <TableCell key={item.id} component="td" scope="row">
-                            <span
-                              className={classes.linkDetail}
+                            {row[item.value]}
+                          </TableCell>
+                        );
+                      } else if (item.value === 'actions') {
+                        return (
+                          <TableCell key={item.id} component="td" scope="row" align="center">
+                            <IconButton
                               onClick={() => redirect(`/master/detail/${row.id}`)}
                             >
-                              {row[item.value]}
-                            </span>
+                              <EditIcon style={{ fontSize: 20, color: '#2979ff' }} />
+                            </IconButton>
+                            <IconButton>
+                              <DeleteIcon style={{ fontSize: 20, color: '#e53935' }} />
+                            </IconButton>
                           </TableCell>
                         );
                       } else {

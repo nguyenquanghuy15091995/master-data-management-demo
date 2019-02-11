@@ -3,9 +3,10 @@ import { fromJS } from 'immutable';
 export const MASTER_LIST_HEADER = [
   { id: 1, name: 'Name', value: 'name' },
   { id: 2, name: 'Icon', value: 'icon' },
-  { id: 3, name: 'Description', value: 'description' },
-  { id: 4, name: 'URL', value: 'url' },
-  { id: 5, name: 'Status', value: 'status' },
+  { id: 3, name: 'URL', value: 'url' },
+  { id: 4, name: 'Status', value: 'status' },
+  { id: 5, name: 'Description', value: 'description' },
+  { id: 6, name: 'Actions', value: 'actions' },
 ];
 
 export const ATTRIBUTE_LIST_HEADER = [
@@ -100,15 +101,15 @@ export function formStyles() {
     },
     enableColor: {
       display: 'inline-block',
-      backgroundColor: '#2962ff',
-      padding: 10,
+      backgroundColor: '#4caf50',
+      padding: 6,
       marginRight: 10,
       borderRadius: '50%',
     },
     disableColor: {
       display: 'inline-block',
-      backgroundColor: '#f50057',
-      padding: 10,
+      backgroundColor: '#607d8b',
+      padding: 6,
       marginRight: 10,
       borderRadius: '50%',
     },

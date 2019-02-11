@@ -14,12 +14,16 @@ import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import CustomTable from 'components/CustomTable';
 import TablePaginationActions from 'components/CustomTable/TablePaginationActions';
 
 import { setCurrentObject } from 'containers/App/actions';
 import { makeSelectCurrentObject } from 'containers/App/selectors';
+import { MASTER_DATA_STATUS } from '../MasterPage/constants';
 
 function styles() {
   return {
@@ -102,7 +106,7 @@ class ObjectList extends PureComponent {
       );
     }
 
-    if(currentObject.attributes === undefined || currentObject.attributes === null || currentObject.attributes === []) {
+    if (currentObject.attributes === undefined || currentObject.attributes === null || currentObject.attributes === []) {
       return (
         <Fade in timeout={700}>
           <Typography variant="h5" className={classes.viewTitle}>{currentObject.name} is empty object!</Typography>
@@ -128,16 +132,17 @@ class ObjectList extends PureComponent {
               <TableRow>
                 {
                   currentObject.attributes.map(attribute => (
-                    <TableCell
+                    attribute.status === MASTER_DATA_STATUS.ENABLE ? (<TableCell
                       key={attribute.id}
                       component="th"
                       scope="row"
                       align={attribute.value === 'status' ? 'center' : 'left'}
                     >
                       {attribute.name}
-                    </TableCell>
+                    </TableCell>) : null
                   ))
                 }
+                <TableCell component="td" scope="row" align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -147,12 +152,22 @@ class ObjectList extends PureComponent {
                     {
                       currentObject.attributes.map((item, index) => {
                         return (
-                          <TableCell key={item.id} component="td" scope="row">
-                            {row[item.code]}
-                          </TableCell>
+                          item.status === MASTER_DATA_STATUS.ENABLE ? (
+                            <TableCell key={item.id} component="td" scope="row">
+                              {row[item.code]}
+                            </TableCell>
+                          ) : null
                         );
                       })
                     }
+                    <TableCell component="td" scope="row" align="center">
+                      <IconButton>
+                        <EditIcon style={{ fontSize: 20, color: '#2979ff' }} />
+                      </IconButton>
+                      <IconButton>
+                        <DeleteIcon style={{ fontSize: 20, color: '#e53935' }} />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 ))
               }
@@ -161,7 +176,7 @@ class ObjectList extends PureComponent {
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
-                  colSpan={currentObject.attributes.length}
+                  colSpan={currentObject.attributes.length + 1}
                   count={currentObject.data.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
