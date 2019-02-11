@@ -19,3 +19,7 @@ export const makeSelectMasterList = () => createSelector(selectGlobal, masterLis
 export const makeSelectCurrentMaster = () => createSelector(selectGlobal, masterState =>
   masterState.get('currentMaster') !== null && masterState.get('currentMaster') !== undefined ? masterState.get('currentMaster').toJS() : null,
 );
+
+export const makeSelectCurrentObject = () => createSelector(selectGlobal, objectState =>
+  objectState.get('currentObject') !== null && objectState.get('currentObject') !== undefined ? objectState.get('currentObject').toJS() : null,
+);

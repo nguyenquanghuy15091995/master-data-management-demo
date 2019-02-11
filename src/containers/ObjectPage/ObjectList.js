@@ -14,20 +14,16 @@ import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-import Icon from '@material-ui/core/Icon';
 
 import CustomTable from 'components/CustomTable';
 import TablePaginationActions from 'components/CustomTable/TablePaginationActions';
 
-import {
-  makeSelectMasterList,
-} from 'containers/App/selectors';
-
-import { MASTER_LIST_HEADER } from './constants';
+import { setCurrentObject } from 'containers/App/actions';
+import { makeSelectCurrentObject } from 'containers/App/selectors';
 
 function styles() {
   return {
-    masterPageContainer: {},
+    objectListContainer: {},
     ENABLE: {
       display: 'inline-block',
       backgroundColor: '#2962ff',
@@ -73,11 +69,19 @@ function styles() {
   };
 }
 
-class MasterList extends PureComponent {
+class ObjectList extends PureComponent {
   state = {
     page: 0,
     rowsPerPage: 5,
   };
+
+  componentDidMount() {
+    const {
+      doSetCurrentObject,
+      match: { params },
+    } = this.props;
+    doSetCurrentObject(params.masterId);
+  }
 
   handleChangePage = (event, page) => {
     this.setState({ page });
@@ -88,85 +92,77 @@ class MasterList extends PureComponent {
   };
 
   render() {
-    const { masterList, classes, redirect } = this.props;
+    const { classes, currentObject } = this.props;
     const { page, rowsPerPage } = this.state;
+    if (currentObject === null) {
+      return (
+        <Fade in timeout={700}>
+          <Typography variant="h5" className={classes.viewTitle}>Waiting...</Typography>
+        </Fade>
+      );
+    }
+
+    if(currentObject.attributes === undefined || currentObject.attributes === null || currentObject.attributes === []) {
+      return (
+        <Fade in timeout={700}>
+          <Typography variant="h5" className={classes.viewTitle}>{currentObject.name} is empty object!</Typography>
+        </Fade>
+      );
+    }
+
     return (
       <Fade in timeout={700}>
-        <div className={classes.masterPageContainer}>
+        <div className={classes.objectListContainer}>
           <div className={classes.topControl}>
-            <Typography variant="h5" className={classes.viewTitle}>Master Data List</Typography>
+            <Typography variant="h5" className={classes.viewTitle}>{currentObject.name} List</Typography>
             <Button
               variant="contained"
               className={classes.addButton}
-              onClick={() => redirect('/master/create')}
             >
               <AddIcon className={classes.leftIcon} />
-              Create New Master Data
+              Create New Data
             </Button>
           </div>
           <CustomTable>
             <TableHead>
               <TableRow>
                 {
-                  MASTER_LIST_HEADER.map((item) => (
+                  currentObject.attributes.map(attribute => (
                     <TableCell
-                      key={item.id}
+                      key={attribute.id}
                       component="th"
                       scope="row"
-                      align={item.value === 'status' || item.value === 'icon' ? 'center' : 'left'}
+                      align={attribute.value === 'status' ? 'center' : 'left'}
                     >
-                      {item.name}
+                      {attribute.name}
                     </TableCell>
                   ))
                 }
               </TableRow>
             </TableHead>
             <TableBody>
-              {masterList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
-                <TableRow key={row.id}>
-                  {
-                    MASTER_LIST_HEADER.map((item) => {
-                      if (item.value === 'icon') {
-                        return (
-                          <TableCell key={item.id} component="td" scope="row" align="center">
-                            <Icon style={{ color: '#a6a6a6' }}>{row[item.value]}</Icon>
-                          </TableCell>
-                        );
-                      } else if (item.value === 'status') {
-                        return (
-                          <TableCell key={item.id} component="td" scope="row" align="center">
-                            <div className={classes[row[item.value]]}>{row[item.value]}</div>
-                          </TableCell>
-                        );
-                      } else if (item.value === 'name') {
+              {
+                currentObject.data.map(row => (
+                  <TableRow key={row.id}>
+                    {
+                      currentObject.attributes.map((item, index) => {
                         return (
                           <TableCell key={item.id} component="td" scope="row">
-                            <span
-                              className={classes.linkDetail}
-                              onClick={() => redirect(`/master/detail/${row.id}`)}
-                            >
-                              {row[item.value]}
-                            </span>
+                            {row[item.code]}
                           </TableCell>
                         );
-                      } else {
-                        return (
-                          <TableCell key={item.id} component="td" scope="row">
-                            {row[item.value]}
-                          </TableCell>
-                        );
-                      }
-                    })
-                  }
-                </TableRow>
-              ))}
+                      })
+                    }
+                  </TableRow>
+                ))
+              }
             </TableBody>
             <TableFooter>
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
-                  colSpan={MASTER_LIST_HEADER.length}
-                  count={masterList.length}
+                  colSpan={currentObject.attributes.length}
+                  count={currentObject.data.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   SelectProps={{
@@ -186,16 +182,16 @@ class MasterList extends PureComponent {
 }
 
 const mapStateToProps = createStructuredSelector({
-  masterList: makeSelectMasterList(),
+  currentObject: makeSelectCurrentObject(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    redirect: bindActionCreators(push, dispatch),
+    doSetCurrentObject: bindActionCreators(setCurrentObject, dispatch),
   };
 }
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
-const styleConnect = withStyles(styles);
+const connectStyles = withStyles(styles);
 
-export default compose(withConnect, styleConnect)(MasterList);
+export default compose(withConnect, connectStyles)(ObjectList);

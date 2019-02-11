@@ -34,14 +34,18 @@ class MasterDetail extends PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    this.props.doSetCurrentMaster(null);
+  }
+
   submit = (values) => {
-    const { doUpdateMasterItem } = this.props;
+    const { doUpdateMasterItem, redirect } = this.props;
     doUpdateMasterItem(values);
+    redirect('/master');
   }
 
   handleBackButton = () => {
-    const { redirect, doSetCurrentMaster } = this.props;
-    doSetCurrentMaster(null);
+    const { redirect } = this.props;
     redirect('/master');
   }
 

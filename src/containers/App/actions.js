@@ -1,6 +1,7 @@
 import {
   SET_SIDEBAR_OPEN,
   SET_CURRENT_MASTER,
+  SET_CURRENT_OBJECT,
   UPDATE_MASTER_ITEM,
   CREATE_MASTER_ITEM,
 } from './constants';
@@ -30,5 +31,12 @@ export function createMasterItem(item) {
   return {
     type: CREATE_MASTER_ITEM,
     masterItem: item,
+  };
+}
+
+export function setCurrentObject(masterDataId) {
+  return {
+    type: SET_CURRENT_OBJECT,
+    masterId: masterDataId,
   };
 }

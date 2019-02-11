@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -6,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableFooter from '@material-ui/core/TableFooter';
 import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
-import { Field } from 'redux-form/immutable';
+import { Field, change } from 'redux-form/immutable';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -58,12 +60,14 @@ function styles() {
 
 class AttributeTable extends Component {
   addRow = () => {
-    this.props.fields.push({ id: this.props.fields.length + 1 });
+    this.props.fields.push({ id: '' + Date.now() + this.props.fields.length });
   }
 
   render() {
     const {
       fields,
+      changeValue,
+      meta,
       classes,
     } = this.props;
     return (
@@ -132,7 +136,29 @@ class AttributeTable extends Component {
                       if (item.value === 'name') {
                         return (
                           <TableCell className={classes.attCell} key={`${field}.${item.value}-${item.id}`} component="td" scope="row">
-                            <Field nonHelpText name={`${field}.${item.value}`} style={{ minWidth: 100 }} component={ReduxField} fullWidth />
+                            <Field
+                              nonHelpText
+                              name={`${field}.${item.value}`}
+                              style={{ minWidth: 100 }}
+                              component={ReduxField}
+                              fullWidth
+                              onChange={(event, newValue, previousValue, name) => {
+                                let code = '';
+                                if(newValue === null || newValue === undefined) {
+                                  code = '';
+                                } else {
+                                  code = newValue.replace(/ /g, '_');
+                                }
+                                changeValue(meta.form, `${field}.code`, code);
+                              }}
+                            />
+                          </TableCell>
+                        );
+                      }
+                      if (item.value === 'code') {
+                        return (
+                          <TableCell className={classes.attCell} key={`${field}.${item.value}-${item.id}`} component="td" scope="row">
+                            <Field nonHelpText disabled name={`${field}.${item.value}`} component={ReduxField} fullWidth />
                           </TableCell>
                         );
                       }
@@ -167,4 +193,10 @@ class AttributeTable extends Component {
   }
 }
 
-export default withStyles(styles)(AttributeTable);
+function mapDispatchToProps(dispatch) {
+  return {
+    changeValue: bindActionCreators(change, dispatch),
+  };
+}
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(AttributeTable));

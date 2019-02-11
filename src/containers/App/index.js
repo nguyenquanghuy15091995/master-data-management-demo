@@ -39,7 +39,7 @@ function styles() {
 
 class App extends PureComponent {
   render() {
-    const { classes } = this.props;
+    const { classes, history } = this.props;
     return (
       <MuiThemeProvider theme={theme}>
         <div className={classes.appContainer}>
@@ -47,7 +47,7 @@ class App extends PureComponent {
           <Sidebar />
           <div className={classes.mainContainer}>
             <div className={classes.mainWrapper}>
-              <Routes />
+              <Routes history={history} />
             </div>
           </div>
         </div>

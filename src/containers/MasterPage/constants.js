@@ -1,3 +1,5 @@
+import { fromJS } from 'immutable';
+
 export const MASTER_LIST_HEADER = [
   { id: 1, name: 'Name', value: 'name' },
   { id: 2, name: 'Icon', value: 'icon' },
@@ -9,9 +11,10 @@ export const MASTER_LIST_HEADER = [
 export const ATTRIBUTE_LIST_HEADER = [
   { id: 1, name: 'Name', value: 'name' },
   { id: 2, name: 'Type', value: 'type' },
-  { id: 3, name: 'Status', value: 'status' },
-  { id: 4, name: 'Description', value: 'description' },
-  { id: 5, name: 'Actions', value: 'actions' },
+  { id: 3, name: 'Code', value: 'code' },
+  { id: 4, name: 'Status', value: 'status' },
+  { id: 5, name: 'Description', value: 'description' },
+  { id: 6, name: 'Actions', value: 'actions' },
 ];
 
 export const MASTER_DATA_STATUS = {
@@ -40,13 +43,13 @@ export function validate(values) {
     if (values.get('attributes')) {
       values.get('attributes').forEach((attribute, index) => {
         const attError = {};
-        if (!attribute || !attribute.name) {
+        if (!attribute || !fromJS(attribute).get('name')) {
           attError.name = 'Required';
         }
-        if (!attribute || !attribute.type) {
+        if (!attribute || !fromJS(attribute).get('type')) {
           attError.type = 'Required';
         }
-        if (!attribute || !attribute.status) {
+        if (!attribute || !fromJS(attribute).get('status')) {
           attError.status = 'Required';
         }
         attErrors[index] = attError;

@@ -26,6 +26,7 @@ import {
   makeSelectSidebarOpen,
   makeSelectLocation,
   makeSelectMasterList,
+  makeSelectCurrentObject,
 } from './selectors';
 import { setSidebarOpen } from './actions';
 import {
@@ -87,7 +88,7 @@ function styles(theme) {
 
 class Sidebar extends PureComponent {
   componentDidMount() {
-    const { masterList, redirect, location } = this.props;
+    const { masterList, redirect, location, currentObject } = this.props;
     if (masterList.length === 0) {
       redirect('/');
       document.getElementById('page-title-01').innerHTML = 'Home';
@@ -97,16 +98,28 @@ class Sidebar extends PureComponent {
         document.getElementById('page-title-01').innerHTML = 'Master Page';
       } else if (location.pathname === '/') {
         document.getElementById('page-title-01').innerHTML = 'Home';
-      } else if (currentMaster === undefined) {
+      } else if (currentObject === null) {
         document.getElementById('page-title-01').innerHTML = '--Unknown--';
       } else {
-        document.getElementById('page-title-01').innerHTML = currentMaster.name;
+        document.getElementById('page-title-01').innerHTML = currentObject.name;
+      }
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (document.getElementById('page-title-01').innerHTML === '--Unknown--') {
+      const { currentObject } = nextProps;
+      if (currentObject === null) {
+        document.getElementById('page-title-01').innerHTML = '--Unknown--';
+      } else {
+        document.getElementById('page-title-01').innerHTML = currentObject.name;
       }
     }
   }
 
   handleMenuItem = (item) => {
-    this.props.redirect(item.url);
+    const param = item.url !== '/master' ? `/${item.id}` : '';
+    this.props.redirect(`${item.url}${param}`);
     document.getElementById('page-title-01').innerHTML = item.name;
   }
 
@@ -229,6 +242,7 @@ const mapStateToProps = createStructuredSelector({
   sidebarOpen: makeSelectSidebarOpen(),
   location: makeSelectLocation(),
   masterList: makeSelectMasterList(),
+  currentObject: makeSelectCurrentObject(),
 });
 
 function mapDispatchToProps(dispatch) {
