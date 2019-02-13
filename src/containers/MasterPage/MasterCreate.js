@@ -11,6 +11,7 @@ import BackIcon from '@material-ui/icons/ArrowBack';
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import DialogConfirm from 'components/DialogConfirm';
 import ReduxField from 'components/ReduxField';
 import ReduxSelect from 'components/ReduxSelect';
 import IconSelector from 'components/IconSelector';
@@ -21,11 +22,24 @@ import AttributeTable from './AttributeTable';
 import { MASTER_DATA_STATUS, validate, formStyles } from './constants';
 
 class MasterCreate extends PureComponent {
+  state = {
+    createOpen: false,
+  }
+
   componentDidMount() {
     this.props.initialize({
       status: MASTER_DATA_STATUS.ENABLE,
       icon: 'tag_faces',
+      active: true,
     });
+  }
+
+  handleCreateCancel = () => {
+    this.setState({ createOpen: false });
+  }
+
+  handleCreateOpen = () => {
+    this.setState({ createOpen: true });
   }
 
   submit = (values) => {
@@ -108,12 +122,19 @@ class MasterCreate extends PureComponent {
               variant="contained"
               className={classes.addButton}
               style={{ minWidth: 100 }}
-              onClick={handleSubmit(this.submit)}
+              onClick={this.handleCreateOpen}
               disabled={invalid || pristine}
             >
               Submit
             </Button>
           </div>
+          <DialogConfirm
+            title="Update Confirm"
+            contentText="Do you want to CREATE information?"
+            open={this.state.createOpen}
+            handleCancel={this.handleCreateCancel}
+            handleConfirm={handleSubmit(this.submit)}
+          />
         </form>
       </Fade>
     );

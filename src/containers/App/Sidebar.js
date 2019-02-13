@@ -25,7 +25,7 @@ import { HEADER_HEIGHT } from './Header';
 import {
   makeSelectSidebarOpen,
   makeSelectLocation,
-  makeSelectMasterList,
+  makeSelectMasterListActive,
   makeSelectCurrentObject,
 } from './selectors';
 import { setSidebarOpen } from './actions';
@@ -241,7 +241,7 @@ Sidebar.propTypes = {
 const mapStateToProps = createStructuredSelector({
   sidebarOpen: makeSelectSidebarOpen(),
   location: makeSelectLocation(),
-  masterList: makeSelectMasterList(),
+  masterList: makeSelectMasterListActive(),
   currentObject: makeSelectCurrentObject(),
 });
 

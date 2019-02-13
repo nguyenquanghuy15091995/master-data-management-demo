@@ -6,6 +6,8 @@ import {
   SET_CURRENT_OBJECT,
   UPDATE_MASTER_ITEM,
   CREATE_MASTER_ITEM,
+  DELETE_MASTER_ITEM,
+  RESTORE_MASTER_ITEM,
 } from './constants';
 
 const initState = fromJS({
@@ -53,19 +55,22 @@ const initState = fromJS({
 
 function appReducer(state = initState, action) {
   switch (action.type) {
-    case SET_SIDEBAR_OPEN:
+    case SET_SIDEBAR_OPEN: {
       return state.set('sidebarOpen', action.open);
-    case SET_CURRENT_MASTER:
+    }
+    case SET_CURRENT_MASTER: {
       const currentMaster = state.get('masterList').toJS().find(element => ('' + element.id) === ('' + action.masterId));
       return state.set('currentMaster', currentMaster ? fromJS(currentMaster) : null);
-    case UPDATE_MASTER_ITEM:
+    }
+    case UPDATE_MASTER_ITEM: {
       let list = state.get('masterList').slice();
       const index = list.findIndex(i => ('' + i.id) === ('' + action.masterItem.get('id'))
         || ('' + i.get('id')) === ('' + action.masterItem.get('id')));
       list = fromJS(Object.assign(state.get('masterList').slice().toJS(), list, { [`${index}`]: action.masterItem }));
       return state.set('masterList', list)
         .set('currentMaster', action.masterItem);
-    case CREATE_MASTER_ITEM:
+    }
+    case CREATE_MASTER_ITEM: {
       const listAdd = state.get('masterList').push(action.masterItem);
       const listObjectCreate = state.get('objectData').push(fromJS({
         id: Date.now(),
@@ -74,13 +79,31 @@ function appReducer(state = initState, action) {
       }));
       return state.set('masterList', listAdd)
         .set('objectData', listObjectCreate);
-    case SET_CURRENT_OBJECT:
+    }
+    case DELETE_MASTER_ITEM: {
+      let list = state.get('masterList').slice();
+      const index = list.findIndex(i => ('' + i.id) === ('' + action.masterId)
+        || ('' + i.get('id')) === ('' + action.masterId));
+      list = list.update(index, (item) => item.set('active', false));
+      return state.set('masterList', list)
+        .set('currentMaster', list.get(index));
+    }
+    case RESTORE_MASTER_ITEM: {
+      let list = state.get('masterList').slice();
+      const index = list.findIndex(i => ('' + i.id) === ('' + action.masterId)
+        || ('' + i.get('id')) === ('' + action.masterId));
+      list = list.update(index, (item) => item.set('active', true));
+      return state.set('masterList', list)
+        .set('currentMaster', list.get(index));
+    }
+    case SET_CURRENT_OBJECT: {
       const currMaster = state.get('masterList').toJS().find(element => ('' + element.id) === ('' + action.masterId));
       const currObject = state.get('objectData').toJS().find(element => ('' + element.masterId) === ('' + action.masterId));
       return state.set('currentObject', fromJS({
         ...currMaster,
         ...currObject,
       }));
+    }
     default:
       return state;
   }

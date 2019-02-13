@@ -4,6 +4,8 @@ import {
   SET_CURRENT_OBJECT,
   UPDATE_MASTER_ITEM,
   CREATE_MASTER_ITEM,
+  DELETE_MASTER_ITEM,
+  RESTORE_MASTER_ITEM,
 } from './constants';
 
 export function setSidebarOpen(openStatus) {
@@ -37,6 +39,20 @@ export function createMasterItem(item) {
 export function setCurrentObject(masterDataId) {
   return {
     type: SET_CURRENT_OBJECT,
+    masterId: masterDataId,
+  };
+}
+
+export function deleteMasterItem(masterDataId) {
+  return {
+    type: DELETE_MASTER_ITEM,
+    masterId: masterDataId,
+  };
+}
+
+export function restoreMasterItem(masterDataId) {
+  return {
+    type: RESTORE_MASTER_ITEM,
     masterId: masterDataId,
   };
 }

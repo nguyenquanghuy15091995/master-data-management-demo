@@ -30,6 +30,9 @@ function styles() {
       '&:hover': {
         backgroundColor: '#4db6ac',
       },
+      '&:disabled': {
+        backgroundColor: 'rgba(0, 0, 0, 0.12)',
+      },
     },
     totalRecord: {
       flexGrow: 1,
@@ -69,6 +72,7 @@ class AttributeTable extends Component {
       changeValue,
       meta,
       classes,
+      disabled,
     } = this.props;
     return (
       <div>
@@ -99,8 +103,8 @@ class AttributeTable extends Component {
                       if (item.value === 'actions') {
                         return (
                           <TableCell className={classes.attCell} key={`${field}.${item.value}-${item.id}`} component="td" scope="row" align="center">
-                            <IconButton aria-label="Delete" onClick={() => fields.remove(index)}>
-                              <DeleteIcon style={{ color: '#e53935' }} size={20} />
+                            <IconButton disabled={disabled} aria-label="Delete" onClick={() => fields.remove(index)}>
+                              <DeleteIcon style={{ color: disabled ? 'rgba(0, 0, 0, 0.12)' : '#e53935', fontSize: 20 }} />
                             </IconButton>
                           </TableCell>
                         );
@@ -108,7 +112,7 @@ class AttributeTable extends Component {
                       if (item.value === 'type') {
                         return (
                           <TableCell className={classes.attCell} key={`${field}.${item.value}-${item.id}`} component="td" scope="row">
-                            <Field name={`${field}.${item.value}`} multiline component={ReduxSelect} fullWidth>
+                            <Field disabled={disabled} name={`${field}.${item.value}`} multiline component={ReduxSelect} fullWidth>
                               <MenuItem value={ATTRIBUTE_TYPES.text}>{ATTRIBUTE_TYPES.text}</MenuItem>
                               <MenuItem value={ATTRIBUTE_TYPES.longText}>{ATTRIBUTE_TYPES.longText}</MenuItem>
                               <MenuItem value={ATTRIBUTE_TYPES.number}>{ATTRIBUTE_TYPES.number}</MenuItem>
@@ -119,7 +123,7 @@ class AttributeTable extends Component {
                       if (item.value === 'status') {
                         return (
                           <TableCell className={classes.attCell} key={`${field}.${item.value}-${item.id}`} component="td" scope="row">
-                            <Field name={`${field}.${item.value}`} minWidth={120} multiline component={ReduxSelect} fullWidth>
+                            <Field disabled={disabled} name={`${field}.${item.value}`} minWidth={120} multiline component={ReduxSelect} fullWidth>
                               <MenuItem value={MASTER_DATA_STATUS.ENABLE}><span className={classes.enableColor} /><span>{MASTER_DATA_STATUS.ENABLE}</span></MenuItem>
                               <MenuItem value={MASTER_DATA_STATUS.DISABLE}><span className={classes.disableColor} /><span>{MASTER_DATA_STATUS.DISABLE}</span></MenuItem>
                             </Field>
@@ -129,7 +133,7 @@ class AttributeTable extends Component {
                       if (item.value === 'description') {
                         return (
                           <TableCell className={classes.attCell} key={`${field}.${item.value}-${item.id}`} component="td" scope="row">
-                            <Field name={`${field}.${item.value}`} style={{ minWidth: 250 }} multiline component={ReduxField} fullWidth />
+                            <Field disabled={disabled} name={`${field}.${item.value}`} style={{ minWidth: 250 }} multiline component={ReduxField} fullWidth />
                           </TableCell>
                         );
                       }
@@ -137,6 +141,7 @@ class AttributeTable extends Component {
                         return (
                           <TableCell className={classes.attCell} key={`${field}.${item.value}-${item.id}`} component="td" scope="row">
                             <Field
+                              disabled={disabled}
                               nonHelpText
                               name={`${field}.${item.value}`}
                               style={{ minWidth: 100 }}
@@ -144,7 +149,7 @@ class AttributeTable extends Component {
                               fullWidth
                               onChange={(event, newValue, previousValue, name) => {
                                 let code = '';
-                                if(newValue === null || newValue === undefined) {
+                                if (newValue === null || newValue === undefined) {
                                   code = '';
                                 } else {
                                   code = newValue.replace(/ /g, '_');
@@ -178,10 +183,10 @@ class AttributeTable extends Component {
               <TableCell component="td" scope="row" align="center" colSpan={ATTRIBUTE_LIST_HEADER.length}>
                 <div className={classes.tfooter}>
                   <div className={classes.totalRecord}>
-                    <Typography variant="h6">Total record: {fields.length}</Typography>
+                    <Typography variant="h6">Total records: {fields.length}</Typography>
                   </div>
-                  <Button id="btn-add-att" type="button" onClick={this.addRow} className={classes.addButton}>
-                    <AddListIcon size={30} />
+                  <Button disabled={disabled} id="btn-add-att" type="button" onClick={this.addRow} className={classes.addButton}>
+                    <AddListIcon />
                   </Button>
                 </div>
               </TableCell>

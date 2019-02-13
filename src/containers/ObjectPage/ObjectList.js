@@ -17,6 +17,7 @@ import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import CustomTable from 'components/CustomTable';
 import TablePaginationActions from 'components/CustomTable/TablePaginationActions';
@@ -161,12 +162,16 @@ class ObjectList extends PureComponent {
                       })
                     }
                     <TableCell component="td" scope="row" align="center">
-                      <IconButton>
-                        <EditIcon style={{ fontSize: 20, color: '#2979ff' }} />
-                      </IconButton>
-                      <IconButton>
-                        <DeleteIcon style={{ fontSize: 20, color: '#e53935' }} />
-                      </IconButton>
+                      <Tooltip title="Edit" placement="top">
+                        <IconButton>
+                          <EditIcon style={{ fontSize: 20, color: '#2979ff' }} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete" placement="top">
+                        <IconButton>
+                          <DeleteIcon style={{ fontSize: 20, color: '#e53935' }} />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))

@@ -16,6 +16,14 @@ export const makeSelectMasterList = () => createSelector(selectGlobal, masterLis
   masterListState.get('masterList').toJS(),
 );
 
+export const makeSelectMasterListActive = () => createSelector(selectGlobal, masterListState =>
+  masterListState.get('masterList').toJS().filter(element => element.active),
+);
+
+export const makeSelectMasterListInactive = () => createSelector(selectGlobal, masterListState =>
+  masterListState.get('masterList').toJS().filter(element => !element.active),
+);
+
 export const makeSelectCurrentMaster = () => createSelector(selectGlobal, masterState =>
   masterState.get('currentMaster') !== null && masterState.get('currentMaster') !== undefined ? masterState.get('currentMaster').toJS() : null,
 );

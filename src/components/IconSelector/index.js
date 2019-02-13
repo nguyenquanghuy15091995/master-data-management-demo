@@ -90,10 +90,11 @@ class IconSelector extends Component {
       classes,
       input,
       label,
+      disabled,
     } = this.props;
     return (
       <div className={classes.selectContainer}>
-        <Button variant="outlined" className={classes.button} onClick={this.handleClickOpen}>
+        <Button disabled={disabled} variant="outlined" className={classes.button} onClick={this.handleClickOpen}>
           {label}
           {input.value ? <span style={{ marginRight: 10 }}>:</span> : null}
           {input.value ? <Icon className={classes.iconShow}>{input.value}</Icon> : null}

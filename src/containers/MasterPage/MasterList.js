@@ -18,69 +18,86 @@ import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Tooltip from '@material-ui/core/Tooltip';
+import TextField from '@material-ui/core/TextField';
+import SearchIcon from '@material-ui/icons/Search';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import RestoreIcon from '@material-ui/icons/Restore';
 
+import DialogConfirm from 'components/DialogConfirm';
 import CustomTable from 'components/CustomTable';
 import TablePaginationActions from 'components/CustomTable/TablePaginationActions';
 
 import {
   makeSelectMasterList,
+  makeSelectMasterListActive,
+  makeSelectMasterListInactive,
 } from 'containers/App/selectors';
+import {
+  deleteMasterItem,
+  restoreMasterItem,
+} from 'containers/App/actions';
+import {
+  RECORD_STATUS,
+} from 'containers/App/constants';
 
-import { MASTER_LIST_HEADER } from './constants';
-
-function styles() {
-  return {
-    masterPageContainer: {},
-    ENABLE: {
-      display: 'inline-block',
-      backgroundColor: '#4caf50',
-      padding: 5,
-      borderRadius: '50%',
-      color: '#FFF',
-      marginRight: 7,
-    },
-    DISABLE: {
-      display: 'inline-block',
-      backgroundColor: '#607d8b',
-      padding: 5,
-      borderRadius: '50%',
-      color: '#FFF',
-      marginRight: 7,
-    },
-    topControl: {
-      padding: '5px 0px',
-      display: 'flex',
-    },
-    viewTitle: {
-      flexGrow: 1,
-    },
-    addButton: {
-      marginLeft: 10,
-      backgroundColor: '#009688',
-      color: '#FFF',
-      '&:hover': {
-        backgroundColor: '#4db6ac',
-      },
-    },
-    leftIcon: {
-      color: '#FFF',
-      marginRight: 5,
-    },
-    linkDetail: {
-      '&:hover': {
-        textDecoration: 'underline',
-        color: '#2979ff',
-        cursor: 'pointer',
-      },
-    },
-  };
-}
+import { setMasterListState } from './actions';
+import { makeSelectListState } from './selectors';
+import { MASTER_LIST_HEADER, masterListStyles } from './constants';
 
 class MasterList extends PureComponent {
   state = {
     page: 0,
     rowsPerPage: 5,
-  };
+    searchName: '',
+    askOpen: false,
+    askTitle: '',
+    askContentText: '',
+    currMaster: null,
+  }
+
+  handleAskCancel = () => {
+    this.setState({
+      askOpen: false,
+      currMaster: null,
+      askTitle: '',
+      askContentText: '',
+    });
+  }
+
+  handleAskOpen = (master, title, contentText) => {
+    this.setState({
+      currMaster: master,
+      askOpen: true,
+      askTitle: title,
+      askContentText: contentText,
+    });
+  }
+
+  handleAskConfirm = () => {
+    const { doDeleteMasterItem, doRestoreMasterItem, currentMaster } = this.props;
+    const { currMaster } = this.state;
+    if (currMaster !== null) {
+      if (currMaster.active) {
+        doDeleteMasterItem(currMaster.id);
+      } else {
+        doRestoreMasterItem(currMaster.id);
+      }
+    }
+    this.handleAskCancel();
+  }
+
+  handleSearchChange = (event) => {
+    this.setState({ searchName: event.target.value });
+  }
+
+  handleListState = (event) => {
+    this.props.doSetMasterListState(event.target.value);
+  }
 
   handleChangePage = (event, page) => {
     this.setState({ page });
@@ -91,8 +108,16 @@ class MasterList extends PureComponent {
   };
 
   render() {
-    const { masterList, classes, redirect } = this.props;
-    const { page, rowsPerPage } = this.state;
+    const { masterListAll, masterListActive, masterListInactive, classes, redirect, listState } = this.props;
+    const { page, rowsPerPage, searchName } = this.state;
+
+    let listResult = masterListActive;
+    if (listState === RECORD_STATUS.ALL) {
+      listResult = masterListAll;
+    } else if (listState === RECORD_STATUS.DELETED) {
+      listResult = masterListInactive;
+    }
+
     return (
       <Fade in timeout={700}>
         <div className={classes.masterPageContainer}>
@@ -106,6 +131,38 @@ class MasterList extends PureComponent {
               <AddIcon className={classes.leftIcon} />
               Create New Master Data
             </Button>
+          </div>
+          <div className={classes.toolbar}>
+            <div className={classes.toolbarLeft}>
+              <TextField
+                placeholder="Search by Name"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                onChange={this.handleSearchChange}
+                value={searchName}
+              />
+            </div>
+            <FormControl style={{ minWidth: 120 }}>
+              <InputLabel htmlFor="list-state">List State</InputLabel>
+              <Select
+                value={listState}
+                onChange={this.handleListState}
+                inputProps={{
+                  name: 'listState',
+                  id: 'list-state',
+                }}
+              >
+                <MenuItem value={RECORD_STATUS.ALL}>All</MenuItem>
+                <MenuItem value={RECORD_STATUS.ACTIVE}>Active</MenuItem>
+                <MenuItem value={RECORD_STATUS.DELETED}>Deleted</MenuItem>
+              </Select>
+            </FormControl>
+
           </div>
           <CustomTable>
             <TableHead>
@@ -125,7 +182,12 @@ class MasterList extends PureComponent {
               </TableRow>
             </TableHead>
             <TableBody>
-              {masterList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
+              {listResult.filter(
+                (element) => element.name.search(searchName) !== -1
+                  || this.state.searchName === ''
+                  || this.state.searchName === null
+                  || this.state.searchName === undefined
+              ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
                 <TableRow key={row.id}>
                   {
                     MASTER_LIST_HEADER.map((item) => {
@@ -150,14 +212,30 @@ class MasterList extends PureComponent {
                       } else if (item.value === 'actions') {
                         return (
                           <TableCell key={item.id} component="td" scope="row" align="center">
-                            <IconButton
-                              onClick={() => redirect(`/master/detail/${row.id}`)}
-                            >
-                              <EditIcon style={{ fontSize: 20, color: '#2979ff' }} />
-                            </IconButton>
-                            <IconButton>
-                              <DeleteIcon style={{ fontSize: 20, color: '#e53935' }} />
-                            </IconButton>
+                            <Tooltip title="Edit" placement="top">
+                              <IconButton
+                                onClick={() => redirect(`/master/detail/${row.id}`)}
+                              >
+                                <EditIcon style={{ fontSize: 20, color: '#2979ff' }} />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={row.active ? 'Delete' : 'Restore'} placement="top">
+                              {
+                                row.active ? (
+                                  <IconButton
+                                    onClick={() => this.handleAskOpen(row, 'Delete Confirm', `Do you want to delete ${row.name}?`)}
+                                  >
+                                    <DeleteIcon style={{ fontSize: 20, color: '#e53935' }} />
+                                  </IconButton>
+                                ) : (
+                                    <IconButton
+                                      onClick={() => this.handleAskOpen(row, 'Restore Confirm', `Do you want to restore ${row.name}?`)}
+                                    >
+                                      <RestoreIcon style={{ fontSize: 20, color: '#3f51b5' }} />
+                                    </IconButton>
+                                  )
+                              }
+                            </Tooltip>
                           </TableCell>
                         );
                       } else {
@@ -177,7 +255,7 @@ class MasterList extends PureComponent {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   colSpan={MASTER_LIST_HEADER.length}
-                  count={masterList.length}
+                  count={masterListActive.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   SelectProps={{
@@ -190,6 +268,13 @@ class MasterList extends PureComponent {
               </TableRow>
             </TableFooter>
           </CustomTable>
+          <DialogConfirm
+            title={this.state.askTitle}
+            contentText={this.state.askContentText}
+            open={this.state.askOpen}
+            handleCancel={this.handleAskCancel}
+            handleConfirm={this.handleAskConfirm}
+          />
         </div>
       </Fade>
     );
@@ -197,16 +282,22 @@ class MasterList extends PureComponent {
 }
 
 const mapStateToProps = createStructuredSelector({
-  masterList: makeSelectMasterList(),
+  masterListAll: makeSelectMasterList(),
+  masterListActive: makeSelectMasterListActive(),
+  masterListInactive: makeSelectMasterListInactive(),
+  listState: makeSelectListState(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     redirect: bindActionCreators(push, dispatch),
+    doDeleteMasterItem: bindActionCreators(deleteMasterItem, dispatch),
+    doRestoreMasterItem: bindActionCreators(restoreMasterItem, dispatch),
+    doSetMasterListState: bindActionCreators(setMasterListState, dispatch),
   };
 }
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
-const styleConnect = withStyles(styles);
+const styleConnect = withStyles(masterListStyles);
 
 export default compose(withConnect, styleConnect)(MasterList);

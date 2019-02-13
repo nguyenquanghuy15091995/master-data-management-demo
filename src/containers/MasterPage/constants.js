@@ -1,5 +1,9 @@
 import { fromJS } from 'immutable';
 
+const PREFIX = 'masterData';
+
+export const SET_MASTER_LIST_STATE = `${PREFIX}/SET_MASTER_LIST_STATE`;
+
 export const MASTER_LIST_HEADER = [
   { id: 1, name: 'Name', value: 'name' },
   { id: 2, name: 'Icon', value: 'icon' },
@@ -92,6 +96,22 @@ export function formStyles() {
       flexGrow: 1,
     },
     addButton: {
+      marginLeft: 15,
+      backgroundColor: '#1e88e5',
+      color: '#FFF',
+      '&:hover': {
+        backgroundColor: '#2196f3',
+      },
+    },
+    deleteButton: {
+      marginLeft: 10,
+      backgroundColor: '#e53935',
+      color: '#FFF',
+      '&:hover': {
+        backgroundColor: '#f44336',
+      },
+    },
+    restoreButton: {
       marginLeft: 10,
       backgroundColor: '#1e88e5',
       color: '#FFF',
@@ -112,6 +132,62 @@ export function formStyles() {
       padding: 6,
       marginRight: 10,
       borderRadius: '50%',
+    },
+  };
+}
+
+export function masterListStyles() {
+  return {
+    masterPageContainer: {},
+    ENABLE: {
+      display: 'inline-block',
+      backgroundColor: '#4caf50',
+      padding: 5,
+      borderRadius: '50%',
+      color: '#FFF',
+      marginRight: 7,
+    },
+    DISABLE: {
+      display: 'inline-block',
+      backgroundColor: '#607d8b',
+      padding: 5,
+      borderRadius: '50%',
+      color: '#FFF',
+      marginRight: 7,
+    },
+    topControl: {
+      padding: '5px 0px',
+      display: 'flex',
+    },
+    toolbar: {
+      padding: '20px 0px 0px 0px',
+      display: 'flex',
+      alignItems: 'flex-end',
+    },
+    toolbarLeft: {
+      flexGrow: 1,
+    },
+    viewTitle: {
+      flexGrow: 1,
+    },
+    addButton: {
+      marginLeft: 10,
+      backgroundColor: '#009688',
+      color: '#FFF',
+      '&:hover': {
+        backgroundColor: '#4db6ac',
+      },
+    },
+    leftIcon: {
+      color: '#FFF',
+      marginRight: 5,
+    },
+    linkDetail: {
+      '&:hover': {
+        textDecoration: 'underline',
+        color: '#2979ff',
+        cursor: 'pointer',
+      },
     },
   };
 }
