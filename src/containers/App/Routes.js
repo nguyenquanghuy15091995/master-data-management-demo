@@ -7,7 +7,7 @@ import { ConnectedRouter } from 'connected-react-router/immutable';
 
 import HomePage from 'containers/HomePage';
 import { MasterListPage, MasterCreatePage, MasterDetailPage } from 'containers/MasterPage';
-import { ObjectList } from 'containers/ObjectPage';
+import { ObjectList, ObjectCreate, ObjectDetail } from 'containers/ObjectPage';
 import NotFoundPage from 'containers/NotFoundPage';
 
 import { makeSelectLocation, makeSelectMasterList } from './selectors';
@@ -24,7 +24,17 @@ class Routes extends PureComponent {
           <Route path="/master/detail/:masterId" component={MasterDetailPage} />
           {
             masterList.map(master => (
-              <Route key={master.id} exact path={`${master.url}/:masterId`} component={ObjectList} />
+              <Route key={master.id} exact path={`${master.url}/:masterId`} render={(props) => <ObjectList currentMaster={master} {...props} />} />
+            ))
+          }
+          {
+            masterList.map(master => (
+              <Route key={`${master.id}create`} path={`${master.url}/:masterId/create`} render={(props) => <ObjectCreate currentMaster={master} {...props} />} />
+            ))
+          }
+          {
+            masterList.map(master => (
+              <Route key={`${master.id}detail`} path={`${master.url}/:masterId/detail/:dataId`} render={(props) => <ObjectDetail currentMaster={master} {...props} />} />
             ))
           }
           <Route path="" component={NotFoundPage} />

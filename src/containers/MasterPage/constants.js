@@ -14,12 +14,13 @@ export const MASTER_LIST_HEADER = [
 ];
 
 export const ATTRIBUTE_LIST_HEADER = [
-  { id: 1, name: 'Name', value: 'name' },
-  { id: 2, name: 'Type', value: 'type' },
-  { id: 3, name: 'Code', value: 'code' },
-  { id: 4, name: 'Status', value: 'status' },
-  { id: 5, name: 'Description', value: 'description' },
-  { id: 6, name: 'Actions', value: 'actions' },
+  { id: 1, name: 'Required', value: 'required' },
+  { id: 2, name: 'Name', value: 'name' },
+  { id: 3, name: 'Type', value: 'type' },
+  { id: 4, name: 'Code', value: 'code' },
+  { id: 5, name: 'Status', value: 'status' },
+  { id: 6, name: 'Description', value: 'description' },
+  { id: 7, name: 'Actions', value: 'actions' },
 ];
 
 export const MASTER_DATA_STATUS = {

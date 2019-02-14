@@ -129,7 +129,7 @@ class MasterCreate extends PureComponent {
             </Button>
           </div>
           <DialogConfirm
-            title="Update Confirm"
+            title="Create Confirm"
             contentText="Do you want to CREATE information?"
             open={this.state.createOpen}
             handleCancel={this.handleCreateCancel}

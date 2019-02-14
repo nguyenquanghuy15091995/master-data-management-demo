@@ -93,23 +93,11 @@ class Sidebar extends PureComponent {
       redirect('/');
       document.getElementById('page-title-01').innerHTML = 'Home';
     } else {
-      const currentMaster = masterList.find((element) => element.url === location.pathname);
       if (checkPage(location.pathname, '/master')) {
         document.getElementById('page-title-01').innerHTML = 'Master Page';
       } else if (location.pathname === '/') {
         document.getElementById('page-title-01').innerHTML = 'Home';
       } else if (currentObject === null) {
-        document.getElementById('page-title-01').innerHTML = '--Unknown--';
-      } else {
-        document.getElementById('page-title-01').innerHTML = currentObject.name;
-      }
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (document.getElementById('page-title-01').innerHTML === '--Unknown--') {
-      const { currentObject } = nextProps;
-      if (currentObject === null) {
         document.getElementById('page-title-01').innerHTML = '--Unknown--';
       } else {
         document.getElementById('page-title-01').innerHTML = currentObject.name;

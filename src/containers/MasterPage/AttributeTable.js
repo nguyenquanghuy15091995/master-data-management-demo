@@ -15,6 +15,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AddListIcon from '@material-ui/icons/LibraryAdd';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import ReduxCheckbox from 'components/ReduxCheckbox';
 import CustomTable from 'components/CustomTable';
 import ReduxField from 'components/ReduxField';
 import ReduxSelect from 'components/ReduxSelect';
@@ -56,7 +57,7 @@ function styles() {
       borderRadius: '50%',
     },
     attCell: {
-      padding: '4px 24px',
+      padding: '4px 12px',
     },
   };
 }
@@ -86,7 +87,8 @@ class AttributeTable extends Component {
                     key={item.id}
                     component="th"
                     scope="row"
-                    align={item.value === 'actions' ? 'center' : 'left'}
+                    align={item.value === 'actions' || item.value === 'required' ? 'center' : 'left'}
+                    style={{ padding: item.value === 'required' ? 0 : '4px 56px 4px 24px' }}
                   >
                     {item.name}
                   </TableCell>
@@ -164,6 +166,13 @@ class AttributeTable extends Component {
                         return (
                           <TableCell className={classes.attCell} key={`${field}.${item.value}-${item.id}`} component="td" scope="row">
                             <Field nonHelpText disabled name={`${field}.${item.value}`} component={ReduxField} fullWidth />
+                          </TableCell>
+                        );
+                      }
+                      if (item.value === 'required') {
+                        return (
+                          <TableCell className={classes.attCell} key={`${field}.${item.value}-${item.id}`} align="center" component="td" scope="row">
+                            <Field nonHelpText disabled name={`${field}.${item.value}`} color="primary" component={ReduxCheckbox} style={{ margin: 0 }} />
                           </TableCell>
                         );
                       }
