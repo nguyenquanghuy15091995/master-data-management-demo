@@ -19,7 +19,7 @@ class ReduxSelect extends Component {
       required,
     } = this.props;
     return (
-      <FormControl disabled={disabled} required={required} style={{ width: fullWidth ? '100%' : 'auto', minWidth: minWidth ? minWidth : 100 }} variant="outlined" error={touched && error}>
+      <FormControl disabled={disabled} required={required} style={{ width: fullWidth ? '100%' : 'auto', minWidth: minWidth ? minWidth : 100 }} variant="outlined" error={touched && (error !== undefined || error !== null)}>
         {label ? <InputLabel htmlFor={`outlined-select-${name}`}>{label}</InputLabel> : null}
         {
           variant === 'outlined' ? (

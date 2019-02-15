@@ -126,6 +126,21 @@ class ObjectDetail extends PureComponent {
                       </Grid>
                     );
                   }
+                  if (attribute.type === ATTRIBUTE_TYPES.number) {
+                    return (
+                      <Grid key={attribute.id} item sm={12} md={12}>
+                        <Field
+                          required={attribute.required}
+                          name={attribute.code}
+                          variant="outlined"
+                          component={ReduxField}
+                          label={attribute.name}
+                          fullWidth
+                          type="number"
+                        />
+                      </Grid>
+                    );
+                  }
                   return (
                     <Grid key={attribute.id} item sm={12} md={6}>
                       <Field
