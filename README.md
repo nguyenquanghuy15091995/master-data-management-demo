@@ -16,8 +16,8 @@ You will also see any lint errors in the console.
 
 ### Preview
 
-<img src="https://raw.githubusercontent.com/nguyenquanghuy15091995/master-data-management-demo/master/preview/preview_01.jpg" alt="preview_1" />
+<img src="https://raw.githubusercontent.com/nguyenquanghuy15091995/master-data-management-demo/master/previews/preview_01.jpg" alt="preview_1" />
 
-<img src="https://raw.githubusercontent.com/nguyenquanghuy15091995/master-data-management-demo/master/preview/preview_02.jpg" alt="preview_2" />
+<img src="https://raw.githubusercontent.com/nguyenquanghuy15091995/master-data-management-demo/master/previews/preview_02.jpg" alt="preview_2" />
 
-<img src="https://raw.githubusercontent.com/nguyenquanghuy15091995/master-data-management-demo/master/preview/preview_03.jpg" alt="preview_3" />
+<img src="https://raw.githubusercontent.com/nguyenquanghuy15091995/master-data-management-demo/master/previews/preview_03.jpg" alt="preview_3" />
